@@ -1,0 +1,56 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGrad" cx="35%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#1c1830"/>
+      <stop offset="100%" stop-color="#0b0a14"/>
+    </radialGradient>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8b5cf6"/>
+      <stop offset="55%" stop-color="#ec4899"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="faceGrad" cx="35%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="65%" stop-color="#ece9f4"/>
+      <stop offset="100%" stop-color="#c9c5d6"/>
+    </radialGradient>
+    <radialGradient id="patchGrad" cx="30%" cy="25%" r="80%">
+      <stop offset="0%" stop-color="#3a3550"/>
+      <stop offset="60%" stop-color="#1c1830"/>
+      <stop offset="100%" stop-color="#0b0a14"/>
+    </radialGradient>
+  </defs>
+
+  <!-- backdrop -->
+  <circle cx="120" cy="120" r="118" fill="url(#bgGrad)"/>
+  <circle cx="120" cy="120" r="114" fill="none" stroke="url(#ringGrad)" stroke-width="3"/>
+
+  <!-- ears -->
+  <circle cx="72" cy="70" r="26" fill="url(#patchGrad)"/>
+  <circle cx="168" cy="70" r="26" fill="url(#patchGrad)"/>
+
+  <!-- face -->
+  <circle cx="120" cy="118" r="62" fill="url(#faceGrad)"/>
+
+  <!-- eye patches -->
+  <ellipse cx="93" cy="118" rx="20" ry="25" fill="url(#patchGrad)" transform="rotate(-10 93 118)"/>
+  <ellipse cx="147" cy="118" rx="20" ry="25" fill="url(#patchGrad)" transform="rotate(10 147 118)"/>
+
+  <!-- eyes -->
+  <circle cx="93" cy="120" r="6" fill="#fff"/>
+  <circle cx="147" cy="120" r="6" fill="#fff"/>
+  <circle cx="95" cy="121.5" r="3.2" fill="#0b0a14"/>
+  <circle cx="145" cy="121.5" r="3.2" fill="#0b0a14"/>
+
+  <!-- nose + mouth -->
+  <ellipse cx="120" cy="140" rx="7" ry="5" fill="#100e1c"/>
+  <path d="M120 145 Q120 153 112 157" stroke="#3a3550" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <path d="M120 145 Q120 153 128 157" stroke="#3a3550" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+
+  <!-- highlight -->
+  <ellipse cx="98" cy="90" rx="16" ry="9" fill="#ffffff" opacity="0.5"/>
+
+  <!-- code bracket motif ( < / > ) integrated below the face, the "signature" detail -->
+  <text x="120" y="205" font-family="JetBrains Mono, monospace" font-size="22" font-weight="700"
+        text-anchor="middle" fill="url(#ringGrad)">&lt;pd/&gt;</text>
+</svg>

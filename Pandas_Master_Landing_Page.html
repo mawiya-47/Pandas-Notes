@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pandas Master — Interactive Course</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg-0:#0b0a14;
+    --bg-1:#141126;
+    --violet:#8b5cf6;
+    --violet-deep:#5b21b6;
+    --pink:#ec4899;
+    --cyan:#22d3ee;
+    --bamboo:#9ae66e;
+    --ink:#f1edff;
+    --ink-dim:#a79fcf;
+    --card:rgba(255,255,255,0.045);
+    --card-border:rgba(255,255,255,0.09);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -5%, rgba(139,92,246,0.25), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 90% 10%, rgba(236,72,153,0.18), transparent 55%),
+      var(--bg-0);
+    color:var(--ink);
+    font-family:'Space Grotesk',sans-serif;
+    overflow-x:hidden;
+  }
+
+  ::selection{background:var(--violet);color:#fff;}
+
+  a{color:inherit;text-decoration:none;}
+
+  .noise{
+    position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.03;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 6vw;
+    backdrop-filter:blur(14px);
+    background:rgba(11,10,20,0.55);
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:20px;letter-spacing:.2px;}
+  .brand img{width:34px;height:34px;border-radius:50%;box-shadow:0 0 14px rgba(139,92,246,0.5);}
+  nav{display:flex;gap:34px;font-size:14px;color:var(--ink-dim);}
+  nav a:hover{color:var(--ink);}
+  .cta-small{
+    padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,0.18);
+    font-size:13px;transition:.25s;
+  }
+  .cta-small:hover{border-color:var(--violet);background:rgba(139,92,246,0.12);}
+
+  /* ---------------- HERO ---------------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:grid;grid-template-columns:1.05fr 0.95fr;
+    align-items:center;
+    padding:150px 6vw 90px;
+    gap:20px;
+  }
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:2px;text-transform:uppercase;
+    color:var(--bamboo);
+    display:flex;align-items:center;gap:10px;margin-bottom:26px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1px;background:var(--bamboo);}
+
+  h1.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:clamp(42px,5.4vw,80px);
+    line-height:1.02;
+    letter-spacing:-0.5px;
+    margin-bottom:26px;
+  }
+  h1.display em{
+    font-style:italic;font-weight:500;
+    background:linear-gradient(100deg,var(--violet),var(--pink) 60%,var(--cyan));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+
+  .hero p.sub{
+    font-size:17px;line-height:1.7;color:var(--ink-dim);
+    max-width:480px;margin-bottom:38px;
+  }
+  .hero p.sub code{
+    font-family:'JetBrains Mono',monospace;font-size:14px;
+    background:rgba(139,92,246,0.15);padding:2px 7px;border-radius:5px;color:#d8ccff;
+  }
+
+  .hero-ctas{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:56px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:15px 26px;border-radius:12px;font-weight:600;font-size:15px;
+    transition:.25s cubic-bezier(.2,.8,.2,1);
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,var(--violet),var(--violet-deep));
+    color:#fff;box-shadow:0 8px 30px rgba(139,92,246,0.45);
+  }
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(139,92,246,0.6);}
+  .btn-ghost{
+    border:1px solid rgba(255,255,255,0.18);color:var(--ink);
+  }
+  .btn-ghost:hover{background:rgba(255,255,255,0.06);}
+
+  .stat-row{display:flex;gap:38px;}
+  .stat b{
+    display:block;font-family:'Fraunces',serif;font-size:30px;font-weight:600;
+    background:linear-gradient(120deg,var(--ink),var(--ink-dim));
+    -webkit-background-clip:text;background-clip:text;
+  }
+  .stat span{font-size:12px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:1px;}
+
+  /* ---------------- PANDA (signature element) ---------------- */
+  .panda-stage{
+    position:relative;
+    display:flex;align-items:center;justify-content:center;
+    perspective:1200px;
+  }
+  .panda-glow{
+    position:absolute;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(139,92,246,0.35),transparent 70%);
+    filter:blur(30px);
+    animation:pulseGlow 5s ease-in-out infinite;
+  }
+  @keyframes pulseGlow{
+    0%,100%{transform:scale(1);opacity:.8;}
+    50%{transform:scale(1.12);opacity:1;}
+  }
+  .panda-wrap{
+    position:relative;width:420px;
+    animation:floaty 6s ease-in-out infinite;
+    transform-style:preserve-3d;
+  }
+  @keyframes floaty{
+    0%,100%{transform:translateY(0) rotateY(-8deg) rotateX(2deg);}
+    50%{transform:translateY(-18px) rotateY(4deg) rotateX(-1deg);}
+  }
+  .panda-wrap svg{width:100%;height:auto;filter:drop-shadow(0 30px 40px rgba(0,0,0,0.55));}
+
+  .badge-float{
+    position:absolute;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    backdrop-filter:blur(10px);
+    padding:10px 16px;border-radius:12px;
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    display:flex;align-items:center;gap:8px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+  }
+  .badge-1{top:8%;left:-4%;animation:driftA 7s ease-in-out infinite;}
+  .badge-2{bottom:14%;right:-8%;animation:driftB 8s ease-in-out infinite;}
+  .badge-3{top:48%;right:-14%;animation:driftA 6.5s ease-in-out infinite reverse;}
+  @keyframes driftA{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  @keyframes driftB{0%,100%{transform:translateY(0)}50%{transform:translateY(12px)}}
+  .badge-float .sq{width:8px;height:8px;border-radius:2px;}
+
+  /* ---------------- MODULE MAP ---------------- */
+  section.modules{padding:120px 6vw;position:relative;}
+  .section-head{max-width:640px;margin-bottom:60px;}
+  .section-head .eyebrow{color:var(--pink);}
+  .section-head .eyebrow::before{background:var(--pink);}
+  .section-head h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(30px,3.6vw,46px);
+    line-height:1.1;margin-bottom:16px;
+  }
+  .section-head p{color:var(--ink-dim);font-size:16px;line-height:1.7;}
+
+  .module-grid{
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+    gap:14px;
+  }
+  .mcard{
+    background:var(--card);border:1px solid var(--card-border);
+    border-radius:16px;padding:22px;
+    transition:.3s;
+    position:relative;overflow:hidden;
+  }
+  .mcard::before{
+    content:"";position:absolute;inset:0;opacity:0;
+    background:linear-gradient(135deg,rgba(139,92,246,0.18),rgba(236,72,153,0.1));
+    transition:.3s;
+  }
+  .mcard:hover{transform:translateY(-6px);border-color:rgba(139,92,246,0.5);}
+  .mcard:hover::before{opacity:1;}
+  .mcard .num{
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--bamboo);
+    display:block;margin-bottom:10px;
+  }
+  .mcard h3{font-size:17px;font-weight:600;margin-bottom:6px;position:relative;}
+  .mcard p{font-size:13px;color:var(--ink-dim);line-height:1.5;position:relative;}
+
+  /* ---------------- PROJECTS STRIP ---------------- */
+  section.projects{padding:60px 6vw 120px;}
+  .proj-scroll{
+    display:flex;gap:16px;overflow-x:auto;padding-bottom:16px;
+    scrollbar-width:thin;scrollbar-color:var(--violet) transparent;
+  }
+  .proj-scroll::-webkit-scrollbar{height:6px;}
+  .proj-scroll::-webkit-scrollbar-thumb{background:var(--violet);border-radius:3px;}
+  .pcard{
+    min-width:230px;flex:0 0 auto;
+    background:linear-gradient(160deg,rgba(139,92,246,0.12),rgba(255,255,255,0.02));
+    border:1px solid var(--card-border);border-radius:16px;padding:22px;
+  }
+  .pcard .emoji{font-size:26px;margin-bottom:14px;display:block;}
+  .pcard h4{font-size:15px;margin-bottom:6px;}
+  .pcard p{font-size:12.5px;color:var(--ink-dim);}
+
+  /* ---------------- CODE PREVIEW ---------------- */
+  section.preview{padding:20px 6vw 120px;}
+  .preview-window{
+    background:#0d0c1a;border:1px solid var(--card-border);border-radius:18px;
+    overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5);
+    max-width:880px;margin:0 auto;
+  }
+  .window-bar{
+    display:flex;align-items:center;gap:8px;padding:14px 18px;
+    background:rgba(255,255,255,0.03);border-bottom:1px solid var(--card-border);
+  }
+  .window-bar .dotc{width:11px;height:11px;border-radius:50%;}
+  .window-bar span:nth-child(4){
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-dim);margin-left:10px;
+  }
+  pre.code-block{
+    padding:26px 28px;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.8;
+    color:#d8d2f0;overflow-x:auto;
+  }
+  .code-block .kw{color:#c084fc;}
+  .code-block .fn{color:#67e8f9;}
+  .code-block .str{color:#9ae66e;}
+  .code-block .cm{color:#5f5a7d;}
+
+  /* ---------------- FOOTER / CTA ---------------- */
+  section.finalcta{
+    padding:110px 6vw 60px;text-align:center;position:relative;
+  }
+  .finalcta h2{
+    font-family:'Fraunces',serif;font-weight:600;font-size:clamp(32px,5vw,58px);
+    max-width:760px;margin:0 auto 22px;line-height:1.08;
+  }
+  .finalcta p{color:var(--ink-dim);margin-bottom:38px;}
+
+  footer{
+    padding:34px 6vw 40px;
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid rgba(255,255,255,0.06);
+    font-size:13px;color:var(--ink-dim);
+    flex-wrap:wrap;gap:14px;
+  }
+  footer a:hover{color:var(--bamboo);}
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr;padding-top:130px;}
+    .panda-stage{order:-1;margin-bottom:20px;}
+    .panda-wrap{width:280px;}
+    .badge-float{display:none;}
+    nav{display:none;}
+    .stat-row{gap:24px;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+
+<header>
+  <div class="brand"><img src="logo.svg" alt="pandas.master logo"> pandas.master</div>
+  <nav>
+    <a href="#modules">Modules</a>
+    <a href="#projects">Projects</a>
+    <a href="#preview">Preview</a>
+  </nav>
+  <a href="Ultimate_Pandas_Master_Notebook.ipynb" download class="cta-small">Download .ipynb ↓</a>
+</header>
+
+<section class="hero">
+  <div class="hero-copy">
+    <div class="eyebrow">18 modules · 8 projects · one panda</div>
+    <h1 class="display">Learn <em>pandas</em><br>the way it<br>should feel.</h1>
+    <p class="sub">A single dark-mode Jupyter notebook that takes you from <code>import pandas as pd</code> to full data-analysis projects — groupby, merges, pivots, time series, and eight guided case studies, executed and ready to run.</p>
+    <div class="hero-ctas">
+      <a href="Ultimate_Pandas_Master_Notebook.ipynb" download class="btn btn-primary">⬇ Get the notebook</a>
+      <a href="#modules" class="btn btn-ghost">See what's inside</a>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><b>18</b><span>Modules</span></div>
+      <div class="stat"><b>8</b><span>Real projects</span></div>
+      <div class="stat"><b>120+</b><span>Code cells</span></div>
+      <div class="stat"><b>0</b><span>Errors on run</span></div>
+    </div>
+  </div>
+
+  <div class="panda-stage">
+    <div class="panda-glow"></div>
+    <div class="badge-float badge-1"><span class="sq" style="background:var(--bamboo)"></span>df.groupby('dept')</div>
+    <div class="badge-float badge-2"><span class="sq" style="background:var(--pink)"></span>pd.merge(how='outer')</div>
+    <div class="badge-float badge-3"><span class="sq" style="background:var(--cyan)"></span>loc vs iloc ✓</div>
+
+    <div class="panda-wrap">
+      <!-- 3D-styled panda SVG -->
+      <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bodyGrad" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="60%" stop-color="#eceaf2"/>
+            <stop offset="100%" stop-color="#c9c5d6"/>
+          </radialGradient>
+          <radialGradient id="blackGrad" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#3a3550"/>
+            <stop offset="55%" stop-color="#211d33"/>
+            <stop offset="100%" stop-color="#100e1c"/>
+          </radialGradient>
+          <radialGradient id="earGrad" cx="35%" cy="25%" r="80%">
+            <stop offset="0%" stop-color="#443c66"/>
+            <stop offset="100%" stop-color="#12101e"/>
+          </radialGradient>
+          <linearGradient id="bambooGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#c3f27a"/>
+            <stop offset="100%" stop-color="#6fae3d"/>
+          </linearGradient>
+          <radialGradient id="cheekGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffb9d6" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#ffb9d6" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- ground shadow -->
+        <ellipse cx="200" cy="400" rx="120" ry="16" fill="#000" opacity="0.35"/>
+
+        <!-- back ear -->
+        <circle cx="290" cy="95" r="42" fill="url(#earGrad)"/>
+        <!-- front ear -->
+        <circle cx="118" cy="90" r="44" fill="url(#earGrad)"/>
+
+        <!-- body -->
+        <ellipse cx="200" cy="330" rx="98" ry="80" fill="url(#bodyGrad)"/>
+        <!-- body patch (black belly band) -->
+        <path d="M115 300 Q200 420 285 300 Q285 380 200 400 Q115 380 115 300Z" fill="url(#blackGrad)" opacity="0.9"/>
+
+        <!-- arms -->
+        <ellipse cx="112" cy="315" rx="30" ry="46" fill="url(#blackGrad)" transform="rotate(-18 112 315)"/>
+        <ellipse cx="288" cy="315" rx="30" ry="46" fill="url(#blackGrad)" transform="rotate(18 288 315)"/>
+
+        <!-- head -->
+        <circle cx="203" cy="185" r="112" fill="url(#bodyGrad)"/>
+
+        <!-- eye patches -->
+        <ellipse cx="146" cy="185" rx="34" ry="42" fill="url(#blackGrad)" transform="rotate(-12 146 185)"/>
+        <ellipse cx="262" cy="185" rx="34" ry="42" fill="url(#blackGrad)" transform="rotate(12 262 185)"/>
+
+        <!-- cheeks blush -->
+        <circle cx="150" cy="225" r="26" fill="url(#cheekGrad)"/>
+        <circle cx="258" cy="225" r="26" fill="url(#cheekGrad)"/>
+
+        <!-- eyes -->
+        <circle cx="150" cy="188" r="10" fill="#fff"/>
+        <circle cx="266" cy="188" r="10" fill="#fff"/>
+        <circle cx="153" cy="190" r="5.5" fill="#0b0a14"/>
+        <circle cx="263" cy="190" r="5.5" fill="#0b0a14"/>
+        <circle cx="151.5" cy="188" r="1.6" fill="#fff"/>
+        <circle cx="261.5" cy="188" r="1.6" fill="#fff"/>
+
+        <!-- nose + mouth -->
+        <ellipse cx="204" cy="228" rx="13" ry="9" fill="#100e1c"/>
+        <path d="M204 236 Q204 250 190 256" stroke="#3a3550" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M204 236 Q204 250 218 256" stroke="#3a3550" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+        <!-- highlight -->
+        <ellipse cx="160" cy="140" rx="30" ry="18" fill="#ffffff" opacity="0.45"/>
+
+        <!-- bamboo prop -->
+        <g transform="translate(305,250) rotate(18)">
+          <rect x="0" y="0" width="14" height="120" rx="7" fill="url(#bambooGrad)"/>
+          <rect x="0" y="24" width="14" height="4" fill="#4d7d2a"/>
+          <rect x="0" y="58" width="14" height="4" fill="#4d7d2a"/>
+          <rect x="0" y="92" width="14" height="4" fill="#4d7d2a"/>
+          <path d="M14 20 Q40 10 50 -10" stroke="#7fbf49" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M14 55 Q-14 45 -26 22" stroke="#7fbf49" stroke-width="6" fill="none" stroke-linecap="round"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="modules" id="modules">
+  <div class="section-head">
+    <div class="eyebrow">The curriculum</div>
+    <h2>Every corner of pandas,<br>in order.</h2>
+    <p>Eighteen modules, each with definitions, syntax, real examples, common mistakes, and a quiz — building from Series to production-grade performance patterns.</p>
+  </div>
+  <div class="module-grid">
+    <div class="mcard"><span class="num">01</span><h3>Introduction</h3><p>Install, import, version check.</p></div>
+    <div class="mcard"><span class="num">02</span><h3>Series</h3><p>Index, values, slicing, vector ops.</p></div>
+    <div class="mcard"><span class="num">03</span><h3>DataFrame</h3><p>Lists, dicts, arrays → tables.</p></div>
+    <div class="mcard"><span class="num">04</span><h3>Reading Data</h3><p>CSV, Excel, JSON, SQL, pickle.</p></div>
+    <div class="mcard"><span class="num">05</span><h3>Exploring Data</h3><p>head, info, describe, value_counts.</p></div>
+    <div class="mcard"><span class="num">06</span><h3>Selecting Data</h3><p>loc, iloc, boolean masks, query.</p></div>
+    <div class="mcard"><span class="num">07</span><h3>Cleaning Data</h3><p>Nulls, duplicates, dtypes.</p></div>
+    <div class="mcard"><span class="num">08</span><h3>Sorting</h3><p>sort_values, sort_index.</p></div>
+    <div class="mcard"><span class="num">09</span><h3>Aggregation</h3><p>mean, std, quantile & friends.</p></div>
+    <div class="mcard"><span class="num">10</span><h3>GroupBy</h3><p>Split → apply → combine.</p></div>
+    <div class="mcard"><span class="num">11</span><h3>Merge & Join</h3><p>Inner, left, right, outer, concat.</p></div>
+    <div class="mcard"><span class="num">12</span><h3>Pivot & Reshape</h3><p>pivot_table, melt, stack.</p></div>
+    <div class="mcard"><span class="num">13</span><h3>Date & Time</h3><p>to_datetime, resample, ranges.</p></div>
+    <div class="mcard"><span class="num">14</span><h3>String Ops</h3><p>The .str accessor toolkit.</p></div>
+    <div class="mcard"><span class="num">15</span><h3>Apply & Map</h3><p>Lambdas, row-wise transforms.</p></div>
+    <div class="mcard"><span class="num">16</span><h3>Advanced</h3><p>MultiIndex, categoricals, rolling.</p></div>
+    <div class="mcard"><span class="num">17</span><h3>Performance</h3><p>Vectorize, downcast, benchmark.</p></div>
+    <div class="mcard"><span class="num">18</span><h3>Projects</h3><p>8 end-to-end case studies.</p></div>
+  </div>
+</section>
+
+<section class="projects" id="projects">
+  <div class="section-head">
+    <div class="eyebrow">Module 18</div>
+    <h2>Eight datasets. Eight stories.</h2>
+    <p>Each project runs the full loop — load, clean, explore, analyze, visualize, conclude.</p>
+  </div>
+  <div class="proj-scroll">
+    <div class="pcard"><span class="emoji">🎬</span><h4>Content Trends</h4><p>Netflix-style release patterns by year.</p></div>
+    <div class="pcard"><span class="emoji">🚢</span><h4>Survival Analysis</h4><p>Titanic-style class & gender breakdown.</p></div>
+    <div class="pcard"><span class="emoji">💰</span><h4>Sales Dashboard</h4><p>Monthly revenue by region.</p></div>
+    <div class="pcard"><span class="emoji">🧑‍💼</span><h4>Employee Data</h4><p>Salary bands across departments.</p></div>
+    <div class="pcard"><span class="emoji">🏏</span><h4>Cricket Stats</h4><p>Strike rate rankings.</p></div>
+    <div class="pcard"><span class="emoji">🦠</span><h4>Trend Tracking</h4><p>Rolling 7-day averages.</p></div>
+    <div class="pcard"><span class="emoji">🛒</span><h4>E-commerce</h4><p>Revenue by category.</p></div>
+    <div class="pcard"><span class="emoji">🎓</span><h4>Student Results</h4><p>Grading with pd.cut().</p></div>
+  </div>
+</section>
+
+<section class="preview" id="preview">
+  <div class="preview-window">
+    <div class="window-bar">
+      <span class="dotc" style="background:#ff5f56"></span>
+      <span class="dotc" style="background:#ffbd2e"></span>
+      <span class="dotc" style="background:#27c93f"></span>
+      <span>Ultimate_Pandas_Master_Notebook.ipynb</span>
+    </div>
+    <pre class="code-block"><span class="cm"># Module 10 — GroupBy</span>
+df.groupby(<span class="str">"dept"</span>).agg(
+    avg_salary=(<span class="str">"salary"</span>, <span class="str">"mean"</span>),
+    max_salary=(<span class="str">"salary"</span>, <span class="str">"max"</span>),
+    headcount=(<span class="str">"salary"</span>, <span class="str">"count"</span>)
+)
+
+<span class="cm"># Module 11 — Merge</span>
+pd.<span class="fn">merge</span>(left, right, on=<span class="str">"id"</span>, how=<span class="str">"outer"</span>)
+
+<span class="kw">df</span>.groupby(<span class="str">"dept"</span>)[<span class="str">"salary"</span>].transform(<span class="str">"mean"</span>)</pre>
+  </div>
+</section>
+
+<section class="finalcta">
+  <h2>Bamboo takes patience. So does pandas. Grab the notebook and start chewing.</h2>
+  <p>Fully executed, zero-error, portfolio-ready.</p>
+  <a href="Ultimate_Pandas_Master_Notebook.ipynb" download class="btn btn-primary">⬇ Download the .ipynb</a>
+</section>
+
+<footer>
+  <span>Made with ❤️ by Muhammad Mawiya</span>
+  <a href="https://github.com/mawiya-47" target="_blank">github.com/mawiya-47</a>
+</footer>
+
+</body>
+</html>
